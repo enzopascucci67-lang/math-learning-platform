@@ -65,8 +65,8 @@ Guest outfits save with existing browser demo data. Connected outfits save in th
 ## Supabase configuration
 
 1. Create a **new** Supabase project. Do not use the existing games database.
-2. Run migrations `001_foundation.sql`, `002_cosmetic_rewards.sql`, `003_classroom_code_privacy.sql`, `004_classroom_grades.sql`, then `005_more_clothing.sql` from `supabase/migrations/` in order in its SQL editor. For an existing project, apply only migrations not yet applied. Migration 002 adds clothing rewards. Migration 003 removes direct join-code reads. Migration 004 adds owner-controlled class grades and checks new assignments against the grade. Apply 004 before using the updated classroom UI. No migration changes grading keys or grants direct profile writes.
-3. Regenerate content with `pnpm exec tsx scripts/seed.ts`, then run `supabase/seed.sql` in the SQL editor. Reapply the seed when curriculum changes; keep question IDs stable because attempts reference them.
+2. Apply migrations from `supabase/migrations/` in this order: `001_foundation.sql`, `002_cosmetic_rewards.sql`, `003_classroom_code_privacy.sql`, `004_classroom_grades.sql`, `005_more_clothing.sql`, and `006_assignment_content.sql`. For an existing staging database at 005, back it up and apply only 006. Verify that a pre-existing assignment still opens for an enrolled student and appears in the teacher report.
+3. Apply the committed `supabase/seed.sql` in the SQL editor after the migrations. When curriculum changes, run `pnpm exec tsx scripts/seed.ts` from the repository root, commit the generated SQL, and reapply it to staging before testing connected grading. Keep lesson and question IDs stable to preserve existing progress. CI verifies that the committed seed matches the generator.
 4. Copy the project URL and publishable client key into `.env.local`:
 
    - `NEXT_PUBLIC_APP_NAME`: optional display name.
@@ -146,7 +146,7 @@ Automated tests verify fraction equivalence, invalid numeric input, answer-key c
 
 Manual acceptance: complete a lesson including a wrong answer and retry; reload and verify tree progress; repeat and verify XP stays unchanged. Create a demo class and assignment, join as demo student, complete the lesson and inspect completion. Check dark mode, mobile navigation, keyboard navigation and tree zoom. For Supabase, repeat with two students and an approved teacher, confirm student B cannot read A's progress, an unrelated teacher cannot access a classroom report, and direct progress/XP/role writes are rejected. Test codes and assignments across separate browsers.
 
-Next priorities: validate against a live Supabase test project, extract remaining route controllers, expand high-quality curriculum and SAT diagnostics, implement configurable assignments, and review safeguarding before collecting real student accounts. Local PostgreSQL authorization tests now cover classrooms and assignments as well as cosmetics. Integrate the existing games only after explicit approval.
+Next priorities: validate against a live Supabase test project, extract remaining route controllers, expand high-quality curriculum and SAT diagnostics, add question-level assignment selection, and review safeguarding before collecting real student accounts. Local PostgreSQL authorization tests now cover classrooms and assignments as well as cosmetics. Integrate the existing games only after explicit approval.
 
 Implementation references: [Next.js installation](https://nextjs.org/docs/app/getting-started/installation), [Supabase Next.js setup](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs).
 
