@@ -87,6 +87,17 @@ RLS covers every application table. Clients cannot insert progress, attempts, XP
 
 Before public use, add join-attempt throttling, abuse monitoring, password/account recovery UI, managed younger-student accounts, consent/retention/deletion policies, and an explicit teacher-verification workflow. The preview does not claim COPPA compliance. No under-13 account collection should be enabled yet. Guest access remains available without personal information.
 
+## Staging release
+
+Use a separate Supabase project with synthetic teacher and student accounts. Set the project's URL and publishable key in the hosting provider's preview environment before building. Keep account signup disabled and set the staging Auth Site URL to the hosted preview used for acceptance.
+
+Record the commit and preview URL for each rehearsal.
+
+1. Apply migrations 001–006 and the seed to an empty staging database. Verify that the preview can sign in and that a teacher can assign work, a student can complete it, and the teacher sees the result.
+2. On an isolated database at 005, seed the curriculum and use a build compatible with 005 to create a single-lesson assignment and record a student's completion. Record the assignment and report before upgrading.
+3. Apply 006, then deploy the current preview against that upgraded database. In separate teacher and student sessions, verify that the same assignment opens, its lesson is unchanged, and the teacher report retains the completion. Record the result for both the fresh install and the upgrade.
+
+
 ## Architecture
 
 ```text

@@ -8,7 +8,10 @@ import { gradeLessons } from "../src/lib/student-learning";
 import { gradeSixLessons } from "../src/lib/grade-six-content";
 import { expandedLessons } from "../src/lib/expanded-content";
 
-test("classroom migrations enforce teacher ownership and student privacy", async (t) => {
+async function verifyClassroomMigrations(
+  t: import("node:test").TestContext,
+  upgradeFrom005: boolean,
+) {
   const db = new PGlite({ extensions: { pgcrypto } });
   t.after(() => db.close());
   const teacher = "00000000-0000-4000-8000-000000000011";
@@ -28,7 +31,7 @@ test("classroom migrations enforce teacher ownership and student privacy", async
     "migrations/003_classroom_code_privacy.sql",
     "migrations/004_classroom_grades.sql",
     "migrations/005_more_clothing.sql",
-    "migrations/006_assignment_content.sql",
+    ...(upgradeFrom005 ? [] : ["migrations/006_assignment_content.sql"]),
   ]) {
     await db.exec(
       await readFile(new URL(`../supabase/${file}`, import.meta.url), "utf8"),
@@ -257,6 +260,43 @@ test("classroom migrations enforce teacher ownership and student privacy", async
       );
     },
   );
+  if (upgradeFrom005) {
+    await t.test(
+      "migration 006 preserves existing assignments and mastery",
+      async () => {
+        await db.exec("reset role");
+        await db.exec(
+          await readFile(
+            new URL(
+              "../supabase/migrations/006_assignment_content.sql",
+              import.meta.url,
+            ),
+            "utf8",
+          ),
+        );
+        await signIn(student);
+        const assignments = await db.query(
+          "select title, lesson_id, additional_lesson_ids from public.assignments",
+        );
+        assert.deepEqual(assignments.rows, [
+          {
+            title: "First practice",
+            lesson_id: lesson.id,
+            additional_lesson_ids: [],
+          },
+        ]);
+        await signIn(teacher);
+        const report = await db.query(
+          "select student_id, lesson_ids, completed_count from public.assignment_content_report($1) order by student_id",
+          [room],
+        );
+        assert.deepEqual(report.rows, [
+          { student_id: student, lesson_ids: [lesson.id], completed_count: 1 },
+          { student_id: peer, lesson_ids: [lesson.id], completed_count: 0 },
+        ]);
+      },
+    );
+  }
   await t.test("selected lessons determine assignment completion", async () => {
     await signIn(teacher);
     const second = allLessons[2];
@@ -446,4 +486,10 @@ test("classroom migrations enforce teacher ownership and student privacy", async
         await assert.rejects(db.query(sql), /permission denied/);
     },
   );
-});
+}
+
+test("fresh classroom migrations enforce teacher ownership and student privacy", (t) =>
+  verifyClassroomMigrations(t, false));
+
+test("classroom upgrade from migration 005 preserves existing work", (t) =>
+  verifyClassroomMigrations(t, true));
