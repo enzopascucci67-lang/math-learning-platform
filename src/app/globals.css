@@ -1,4 +1,24 @@
 @import "tailwindcss";
+.wardrobe { margin: 28px 0; padding: 24px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+.wardrobe-layout { display: grid; grid-template-columns: minmax(160px, 240px) minmax(0, 1fr); gap: 28px; align-items: start; }
+.character-stage { background: var(--bg); border: 1px solid var(--line); border-radius: 20px; }
+.character-preview { display: block; width: 100%; max-width: 240px; margin: auto; }
+.wardrobe fieldset { border: 0; padding: 0; margin: 0 0 22px; min-width: 0; }
+.wardrobe legend { font-weight: 600; margin-bottom: 12px; }
+.wardrobe-items { display: flex; flex-wrap: wrap; gap: 10px; }
+.wardrobe-item { text-align: left; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); padding: 14px; flex: 1 1 155px; }
+.wardrobe-item span { font-size: 12px; }
+.wardrobe-item:disabled { opacity: 0.7; }
+.wardrobe-item.wearing { border: 2px solid var(--accent); }
+@media (max-width: 760px) { .wardrobe-layout { grid-template-columns: 1fr; } .character-stage { max-width: 240px; width: 100%; margin: auto; } }
+.course-map { margin: 24px 0; }
+.course-map > div { margin-top: 20px; }
+.course-paths { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+.lesson-finished { animation: lesson-arrival 450ms ease-out; }
+@keyframes lesson-arrival {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 :root {
   font-family: Arial, Helvetica, sans-serif;
   color-scheme: light;

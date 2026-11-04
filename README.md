@@ -4,6 +4,14 @@ An independent Next.js App Router, strict TypeScript, Tailwind CSS and XYFlow pr
 
 ## Run locally
 
+### Open the preview on Windows
+
+Double-click **Start Math Atlas.cmd** in this project folder. It opens `http://127.0.0.1:3000/learn` in your browser and starts a hidden local preview process if needed. Running the launcher again reuses that process. It uses your installed Node.js or this computer's bundled Codex Node.js runtime. Dependencies must already be installed; if there is no production build yet, the launcher creates one. After changing source code, run `pnpm build` before restarting the preview.
+
+This address works on this Windows computer; it is not a public website link. The launcher can reopen the preview after a restart or closed chat session. Logs and process information stay in the ignored `.preview/` folder. If another application occupies port 3000, the launcher reports that conflict rather than stopping that application. An optional `MATH_ATLAS_PREVIEW_PORT` environment variable selects a different port, which also uses separate browser demo storage.
+
+### Development setup
+
 Requires Node.js 20.9+ (Node 22 LTS recommended) and pnpm 11. Install pnpm if necessary with `npm install -g pnpm`.
 
 ```sh
@@ -24,11 +32,16 @@ pnpm start
 
 ## What works
 
+- My Learning uses a blue numbered circle path personalized by the selected grade, with a next-lesson card, optional branching tree, quick character clothing controls and real progress totals. Practice opens the searchable course catalog for exploring beyond the grade path.
+
+- Each grade from Kindergarten through Grade 12 has a distinct introductory path, selected by unit-level grade metadata rather than broad course ranges. Grade choice persists in this browser; shared lesson progress is preserved when switching grades. These starting paths are not complete grade curricula or adaptive placements.
+- Clear start/resume actions, responsive lesson lists and a visible first-classroom join form help students find their next step.
+
 - Homepage, responsive navigation, dark mode, curriculum filters for K–12 grades and subjects.
 - Data-driven branching Algebra I map with zoom, pan, circular progress, recommendations, and freely accessible lessons.
-- Arithmetic, fractions, seven introductory Algebra I concepts, and original SAT practice in the four digital SAT domains.
+- Arithmetic, fractions, seven introductory Algebra I concepts, and original SAT practice in the four digital SAT domains. Fourteen additional two-question starting lessons cover counting, addition within twenty, place value, division, larger multiplication, decimals, ratios, integers, proportions, triangle angles/area, exponent rules, function composition and right-triangle trigonometry.
 - Multiple choice, numeric/fraction answers with absolute tolerance 0.000001, and a deliberately limited simplified-expression validator. No JavaScript evaluation. Expression equivalence currently accepts whitespace and multiplication-symbol variants of the canonical monomial, not arbitrary symbolic equivalence.
-- Hints, retries, explanations, mastery after every lesson question has been answered correctly, 50 XP once per lesson, levels and avatar placeholder.
+- Hints, retries, explanations, mastery after every lesson question has been answered correctly, 50 XP once per lesson, levels and a customizable character with six clothing items.
 - Browser-persistent classroom creation, random join codes, membership, lesson assignments, due dates, completion and role switching for demonstration.
 - Supabase email/password login, gated registration, authoritative roles, durable progress, classroom operations, assignment completion reports and SQL grading when configured.
 - Modular games registry and integration event contract, with unconnected placeholder cards for existing games.
@@ -39,12 +52,20 @@ Guest progress is stored under `math-atlas:demo:v1` in localStorage. It survives
 
 Connected accounts use Supabase Auth and RLS. Their results do not upload guest data or share the demo classroom database. After sign-in, progress, classrooms, and assignments load from Supabase. A teacher can see only lesson-completion results for lessons assigned to students in their own classroom. No public student profiles or messaging exist. Displayed learner IDs are pseudonymous UUID prefixes. Grade filtering is available; a profile grade column is prepared, but an account grade editor is not yet implemented.
 
-The SAT starting-point experience is an introductory sequence of four domain lessons, not a scored adaptive diagnostic. Practice spans easy, medium and hard questions across the collection; each topic does not yet have every difficulty. Weak areas currently mean domains not mastered. Timed modules, practice configuration, unit quizzes, detailed analytics, unit mastery rewards and cosmetic inventory UI remain future work. Planned subjects are visibly labeled and unavailable for practice. K–12 coverage is not complete.
+The platform waits for connected account data before enabling learning and classroom actions. Switching accounts clears the previous account's displayed data; delayed results from earlier sessions are ignored. Failed account loading offers retry/sign-out controls instead of falling back to guest saves. Guest progress and per-account browser learning preferences remain separate.
+
+The SAT starting-point experience is an introductory sequence of four domain lessons, not a scored adaptive diagnostic. Practice spans easy, medium and hard questions across the collection; each topic does not yet have every difficulty. Weak areas currently mean domains not mastered. Timed modules, practice configuration, unit quizzes, detailed analytics and unit mastery rewards remain future work. Planned subjects are visibly labeled and unavailable for practice. K–12 coverage is not complete.
+
+## Character and clothing rewards
+
+Open **My Profile → My character** to choose clothing, hats and accessories. The sky shirt is free. One completed lesson unlocks the explorer cap and star badge; three unlock the forest hoodie; five unlock the scholar scarf; ten unlock the star crown. Reviewing a completed lesson does not award another reward. Clothing is optional and never blocks lessons.
+
+Guest outfits save with existing browser demo data. Connected outfits save in the profile; database functions derive unlocks from verified lesson completion, validate item slots and reject locked items. Existing accounts receive earned rewards when their inventory loads. Guest rewards do not upload to an account.
 
 ## Supabase configuration
 
 1. Create a **new** Supabase project. Do not use the existing games database.
-2. Run `supabase/migrations/001_foundation.sql` in its SQL editor.
+2. Run migrations `001_foundation.sql`, `002_cosmetic_rewards.sql`, `003_classroom_code_privacy.sql`, `004_classroom_grades.sql`, then `005_more_clothing.sql` from `supabase/migrations/` in order in its SQL editor. For an existing project, apply only migrations not yet applied. Migration 002 adds clothing rewards. Migration 003 removes direct join-code reads. Migration 004 adds owner-controlled class grades and checks new assignments against the grade. Apply 004 before using the updated classroom UI. No migration changes grading keys or grants direct profile writes.
 3. Regenerate content with `pnpm exec tsx scripts/seed.ts`, then run `supabase/seed.sql` in the SQL editor. Reapply the seed when curriculum changes; keep question IDs stable because attempts reference them.
 4. Copy the project URL and publishable client key into `.env.local`:
 
@@ -72,6 +93,7 @@ Before public use, add join-attempt throttling, abuse monitoring, password/accou
 src/app/                 App Router entry, metadata, Tailwind/design tokens
 src/components/          Platform routes, XYFlow tree, reusable progress circle, practice viewer
 src/lib/curriculum.ts    Typed curriculum, original question content, games and outfit contracts
+src/lib/cosmetics.ts     Stable clothing catalog, demo eligibility and outfit validation
 src/lib/answers.ts       Safe numeric and constrained-expression validation
 src/lib/store.ts         Versioned demo storage types and boundary
 src/lib/backend.ts       Optional Supabase client and centralized display name
@@ -82,6 +104,8 @@ tests/                   Answer validation, content integrity and graph tests
 ```
 
 Both grade and subject views refer to the same course data. Every unit stores its own layout coordinates and prerequisite IDs; the map needs no course-specific rendering logic. The current route shell is a client-side V1 container; extract dashboard/classroom controllers and a typed repository interface as these features grow. The SQL content hierarchy mirrors the source content; V1 renders bundled curriculum, while the database stores canonical grading keys. A later content editor can replace bundled reads without changing the lesson model.
+
+`src/lib/grade-content.ts` assigns units to grades and adds introductory content. `src/lib/grade-map.ts` lays out the selected grade's circles and prerequisite branches. **Reapply the regenerated `supabase/seed.sql` to a configured database before practicing the new lessons with connected accounts.** No new schema migration is needed for this increment. Existing lesson and question IDs were retained.
 
 ## Games integration boundary
 
@@ -122,6 +146,27 @@ Automated tests verify fraction equivalence, invalid numeric input, answer-key c
 
 Manual acceptance: complete a lesson including a wrong answer and retry; reload and verify tree progress; repeat and verify XP stays unchanged. Create a demo class and assignment, join as demo student, complete the lesson and inspect completion. Check dark mode, mobile navigation, keyboard navigation and tree zoom. For Supabase, repeat with two students and an approved teacher, confirm student B cannot read A's progress, an unrelated teacher cannot access a classroom report, and direct progress/XP/role writes are rejected. Test codes and assignments across separate browsers.
 
-Next priorities: validate SQL against a live Supabase test project, add an authorization integration suite, extract route controllers, expand high-quality curriculum and SAT diagnostics, implement configurable assignments and profile grade selection, and review safeguarding before collecting real student accounts. Integrate the existing games only after explicit approval.
+Next priorities: validate against a live Supabase test project, extract remaining route controllers, expand high-quality curriculum and SAT diagnostics, implement configurable assignments, and review safeguarding before collecting real student accounts. Local PostgreSQL authorization tests now cover classrooms and assignments as well as cosmetics. Integrate the existing games only after explicit approval.
 
 Implementation references: [Next.js installation](https://nextjs.org/docs/app/getting-started/installation), [Supabase Next.js setup](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs).
+
+Student interface: Learn is the grade-based circle path; My work contains real teacher assignments; My character opens the wardrobe and profile. Desktop navigation stays visible, and phone navigation uses icons with labels. Class grades override personal suggestions for enrolled students; use Learning for to switch between graded classes. Teachers set the grade when creating a class or use Save class grade on an existing room. Only matching lessons appear in the new-assignment picker. Previously assigned work remains visible after a grade change. Personal grade choices and lesson positions remain in this browser, while connected class grades are database-backed.
+
+Grade 6 now offers 12 lessons across 10 skill circles, including eight expanded lessons with 24 questions: fraction groups/division, decimal division, equivalent ratios, percentages, expression evaluation, prism volume and mean/median. This is introductory expanded coverage, not a complete grade curriculum. Existing IDs and progress remain valid. Reapply the current supabase/seed.sql after migrations 001–004 before using new lessons with connected accounts. The local preview includes a Grade 6 explorers demo class; switch Learning for to that class to try its path.
+
+The circle path now has an Atlas pawn marking the next unfinished lesson. Looking at another circle does not move it. Gift dots open clothing reward details, and the checkpoint strip shows cap/badge after 1 completed lesson, hoodie after 3, scarf after 5 and crown after 10. Lessons from any grade count once. These clothing checkpoints are lesson milestones, separate from account levels (one level per five completed lessons). Existing earned clothing is preserved. Future gift dots forecast following the current grade path; exploring out of order can move them. No new migration is required for the pawn/checkpoint UI.
+
+
+## Broad polish and curriculum expansion — October 29, 2026
+
+Added 26 lessons and 78 questions (two lessons per grade, Kindergarten–12), bringing the catalog to 62 lessons and 155 questions. New lessons include worked examples, targeted hints and answer explanations; counting, arrays and fraction strips have accessible teaching illustrations. Grade 6 now has 14 lessons across 12 circles. Coverage is introductory and still incomplete; this is not a full standards-aligned K–12 curriculum.
+
+Polished the rounded character, shaded clothing cards and Atlas pawn. Added Sunset sweater (15 unique completed lessons), Stargazer beanie (20), and Explorer satchel (30), preserving all previous items and thresholds. The path keeps its pawn on the next unfinished lesson while circle selection focuses the selected lesson. Multi-lesson circles expose a compact list. Wardrobe and reward details show the actual item art, with wearing/locked states and mobile/dark styles.
+
+Practice now focuses each new question, prevents duplicate submissions, supplies guidance after incorrect answers, and shows one completion celebration. Replays are clearly marked and do not promise new XP. Next-lesson navigation skips completed lessons and can return to earlier unfinished grade work. Classroom create/join/assignment forms prevent repeated pending writes, reject whitespace-only names/titles, and filter the new-class course list by grade. Teacher reports ignore obsolete responses and show loading feedback. Course coverage labels preserve gaps instead of implying continuous coverage.
+
+Connected setup: apply migration 005_more_clothing.sql after migrations 001–004, then reapply the current supabase/seed.sql. Migration 005 is additive and existing completion grants backfill its new clothing. No live Supabase connection or deployment was configured or changed. Guest saves, canonical IDs and existing architecture remain in place.
+
+Verification: 61 automated tests pass, including all 78 new answer keys through the database grading function, wrong-grade assignment rejection, authorization isolation, and clothing unlock/equip thresholds through 30 lessons. ESLint, strict TypeScript and production build pass. Browser checks covered desktop paths, selected-circle focus and lesson menu, later reward details, phone practice incorrect/retry/completion/replay, locked wardrobe items, dark mode, and equal content/client widths at phone and intermediate widths. Screenshots are in verification/. Hosted teacher/student multi-browser acceptance remains a next step.
+
+Next roadmap priorities: configure a separate Supabase test project and verify real teacher/student accounts; expand and review curriculum coverage; add configurable assignment question selection and richer teacher reporting. Games remain placeholders.

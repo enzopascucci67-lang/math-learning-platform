@@ -5,6 +5,7 @@ export type Attempt = {
   at: string;
 };
 export type Classroom = {
+  grade?: number | null;
   id: string;
   name: string;
   course: string;
@@ -16,10 +17,13 @@ export type Assignment = {
   id: string;
   classroom: string;
   lesson: string;
+  additionalLessons?: string[];
   due: string;
   title: string;
 };
 export type DemoState = {
+  outfit?: import("./curriculum").Outfit;
+  unlockedCosmetics?: string[];
   version: 1;
   completed: string[];
   attempts: Attempt[];

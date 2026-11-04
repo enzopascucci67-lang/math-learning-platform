@@ -1,0 +1,331 @@
+.learning-visual {
+  max-width: 360px;
+  margin: 18px auto 24px;
+  background: linear-gradient(130deg, #edf6ff, #f5faf6);
+  border: 2px solid var(--line);
+  border-radius: 22px;
+  padding: 12px;
+}
+.learning-visual svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.practice h2:focus-visible,
+.next-lesson-card h2:focus-visible {
+  outline: 3px solid #1670ed;
+  outline-offset: 7px;
+  border-radius: 6px;
+}
+.practice-review {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  margin-bottom: 22px;
+  border: 1px solid #bedac8;
+  border-radius: 16px;
+  background: #f0faf3;
+  color: #28583a;
+}
+.practice-review svg {
+  flex-shrink: 0;
+}
+.practice-review p {
+  margin: 0;
+  font-size: 14px;
+}
+.practice .feedback > strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lesson-celebration {
+  position: relative;
+  padding: 22px 0 8px;
+  text-align: center;
+}
+.lesson-celebration h3 {
+  font-size: 25px;
+  margin: 12px 0 6px;
+}
+.lesson-celebration .primary {
+  margin-top: 12px;
+}
+.celebration-medal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 3px solid #f1cf7e;
+  background: linear-gradient(140deg, #fff3b7, #ffce65);
+  color: #946217;
+  box-shadow: 0 5px 0 #d5ab4a20;
+  animation: medal-arrival 450ms ease-out;
+}
+.medal-sparkles {
+  position: absolute;
+  right: -13px;
+  top: -5px;
+  color: #bc8422;
+}
+@keyframes medal-arrival {
+  from {
+    transform: scale(0.7) rotate(-12deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+.pawn-marker {
+  width: 70px;
+  height: 88px;
+  top: -58px;
+  filter: drop-shadow(0 4px 3px #13355b28);
+}
+.numbered-path {
+  padding-top: 65px;
+}
+.unit-lesson-count {
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 3px 9px;
+  border-radius: 10px;
+  margin-top: -6px;
+}
+.unit-lesson-menu {
+  margin-top: 22px;
+  padding: 4px 16px;
+  border: 2px solid var(--line);
+  border-radius: 16px;
+}
+.unit-lesson-menu summary {
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.unit-lesson-menu summary::before {
+  content: "+";
+  font-size: 20px;
+  margin-right: 10px;
+  color: var(--accent);
+}
+.unit-lesson-menu[open] summary::before {
+  content: "−";
+}
+.unit-lesson-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.unit-lesson-menu li {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+.unit-lesson-menu li > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+.unit-lesson-menu li span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.unit-lesson-menu .secondary {
+  font-size: 13px;
+  padding: 9px 15px;
+}
+.reward-token {
+  position: relative;
+  width: 57px;
+  height: 57px;
+}
+.reward-checkpoints li:nth-child(4n)::after {
+  display: none;
+}
+.reward-checkpoints {
+  row-gap: 18px;
+}
+.reward-token .clothing-icon {
+  width: 46px;
+  height: 46px;
+}
+.checkpoint-check {
+  position: absolute;
+  right: -3px;
+  bottom: -2px;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  color: white;
+  background: #2c8c51;
+  border: 2px solid white;
+  border-radius: 50%;
+}
+.reward-detail-icon {
+  width: 58px;
+  height: 58px;
+  background: #edf5ff;
+  border: 1px solid #d1e3f6;
+}
+.reward-detail-icon .clothing-icon {
+  width: 53px;
+  height: 53px;
+}
+.wardrobe-layout {
+  grid-template-columns: minmax(190px, 280px) minmax(0, 1fr);
+}
+.wardrobe .character-stage {
+  align-self: start;
+  border: 0;
+  border-radius: 26px;
+  padding: 18px 10px 14px;
+  background: radial-gradient(ellipse at 50% 30%, #f8fcff, #e6f2ff);
+  box-shadow: inset 0 0 0 2px #dce9f7;
+}
+.wardrobe .character-preview {
+  max-width: 270px;
+}
+.character-stage-caption {
+  margin: 10px 5px 0;
+  text-align: center;
+  font-size: 12px;
+  color: #456586;
+}
+.wardrobe-items {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.wardrobe-item {
+  align-items: center;
+  text-align: center;
+  min-width: 0;
+  padding: 12px 10px;
+  border: 2px solid var(--line);
+  border-bottom-width: 4px;
+  border-radius: 18px;
+  font-size: 14px;
+}
+.wardrobe-item > .clothing-icon {
+  width: 80px;
+  height: 80px;
+}
+.wardrobe-item > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.wardrobe-item > span > svg {
+  flex-shrink: 0;
+}
+.wardrobe-item.wearing {
+  background: #edf6ff;
+  border: 2px solid #4389ed;
+  border-bottom-width: 4px;
+}
+.wardrobe-item:disabled {
+  opacity: 0.75;
+}
+.dashboard-character-stage {
+  border-radius: 25px;
+  background: radial-gradient(ellipse, #f0f8ff 0, transparent 70%);
+}
+.dashboard-character-stage .character-preview {
+  height: 270px;
+  max-width: 240px;
+}
+.character-preview {
+  overflow: visible;
+}
+.app[data-theme="dark"] .learning-visual {
+  background: #1d344b;
+}
+.app[data-theme="dark"] .practice-review {
+  background: #203b30;
+  color: #c2e5cd;
+  border-color: #466f55;
+}
+.app[data-theme="dark"] .wardrobe .character-stage {
+  background: radial-gradient(ellipse, #284568, #1e3049);
+  box-shadow: inset 0 0 0 2px #3d5573;
+}
+.app[data-theme="dark"] .character-stage-caption {
+  color: #bed3eb;
+}
+.app[data-theme="dark"] .wardrobe-item.wearing {
+  background: #203e60;
+}
+.app[data-theme="dark"] .reward-detail-icon {
+  background: #314b66;
+  border-color: #56718e;
+}
+@media (min-width: 1000px) {
+  .wardrobe .character-stage {
+    position: sticky;
+    top: 24px;
+  }
+}
+@media (max-width: 760px) {
+  .wardrobe-layout {
+    grid-template-columns: 1fr;
+  }
+  .wardrobe .character-stage {
+    width: 100%;
+    max-width: 280px;
+  }
+  .wardrobe-items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .practice .learning-visual {
+    padding: 6px;
+  }
+  .wardrobe {
+    padding: 18px 14px;
+  }
+  .wardrobe-item {
+    font-size: 13px;
+  }
+  .unit-lesson-menu li {
+    gap: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .celebration-medal {
+    animation: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .student-app > header > nav a {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8px 3px;
+    font-size: 11px;
+    gap: 4px;
+    min-height: 68px;
+  }
+  .student-app > header > nav a span {
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
+  }
+}

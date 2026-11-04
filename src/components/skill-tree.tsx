@@ -2,6 +2,7 @@
 import { Background, Controls, ReactFlow, MarkerType } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import type { Course } from "@/lib/curriculum";
+import { unitProgress, unitReadiness } from "@/lib/skill-tree";
 export function ProgressCircle({
   value,
   size = 56,
@@ -53,18 +54,14 @@ export function SkillTree({
 }) {
   const nodes = course.units.map((u) => ({
     id: u.id,
+    ariaLabel: `${u.title}: ${unitReadiness(course, u, completed)}. Open unit lessons.`,
     position: { x: u.x, y: u.y },
     data: {
       label: (
         <div className="node-label">
-          <ProgressCircle
-            value={
-              (100 * u.lessons.filter((l) => completed.includes(l.id)).length) /
-              u.lessons.length
-            }
-          />
+          <ProgressCircle value={unitProgress(u, completed)} />
           <strong>{u.title}</strong>
-          <small>{u.lessons.length} lesson · Explore →</small>
+          <small>{unitReadiness(course, u, completed)}</small>
         </div>
       ),
     },
@@ -81,7 +78,7 @@ export function SkillTree({
       id: `${source}-${u.id}`,
       source,
       target: u.id,
-      animated: true,
+      animated: false,
       style: { stroke: "#9b9be4", strokeWidth: 2 },
       markerEnd: { type: MarkerType.ArrowClosed, color: "#9b9be4" },
     })),

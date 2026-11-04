@@ -1,4 +1,10 @@
 import "./globals.css";
+import "./student.css";
+import "./grade-path.css";
+import "./learning-dashboard.css";
+import "./friendly-ui.css";
+import "./path-rewards.css";
+import "./polish.css";
 export const metadata = {
   title: "Math Atlas — Find your path in math",
   description:

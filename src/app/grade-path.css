@@ -1,0 +1,188 @@
+.personal-learning-workspace {
+  max-width: 1180px;
+  margin: auto;
+  padding: 0 28px;
+}
+.personal-learning-workspace > main {
+  padding: 0 0 64px;
+  max-width: none;
+}
+.learning-eyebrow {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 12px !important;
+}
+.grade-path-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin: 12px 0 28px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.circle-learning-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  align-items: start;
+  gap: 36px;
+  padding: 20px 0;
+}
+.grade-circle-map {
+  position: relative;
+  min-width: 0;
+}
+.grade-branches {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.grade-branches line {
+  stroke: var(--line);
+  stroke-width: 3;
+}
+.grade-skill {
+  position: absolute;
+  width: min(170px, 32%);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  scroll-margin-top: 24px;
+}
+.skill-circle {
+  display: grid;
+  place-items: center;
+  width: 112px;
+  height: 112px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 0;
+  background: var(--card);
+  color: var(--accent);
+  box-shadow: 0 3px 12px #344d4010;
+  transition: box-shadow 150ms ease;
+}
+.skill-circle.selected {
+  box-shadow:
+    0 0 0 3px var(--accent),
+    0 6px 18px #546bda18;
+}
+.skill-circle:hover {
+  box-shadow: 0 0 0 3px var(--accent);
+}
+.grade-skill > strong {
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 0 3px;
+}
+.grade-skill > span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.circle-lesson-panel {
+  position: sticky;
+  top: 24px;
+  border-left: 1px solid var(--line);
+  padding: 20px 0 20px 28px;
+}
+.circle-panel-label {
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  margin-bottom: 14px;
+}
+.circle-lesson-panel > h2 {
+  font-size: 24px;
+  line-height: 1.3;
+  margin-bottom: 24px;
+}
+.circle-lesson-panel > h2:focus {
+  outline: none;
+}
+.circle-lesson h3 {
+  font-size: 17px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+.circle-lesson p {
+  font-size: 12px;
+}
+.circle-lesson + .circle-lesson {
+  margin-top: 24px;
+}
+.grade-path-note {
+  margin: 24px 0 0;
+  font-size: 12px;
+  text-align: center;
+}
+.grade-path-note a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.grade-welcome {
+  padding: 40px 0;
+  text-align: center;
+}
+.grade-welcome h2 {
+  font-size: 26px;
+}
+.welcome-circles {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin: 0 0 32px;
+}
+.welcome-circles span {
+  border: 3px solid var(--line);
+  border-radius: 50%;
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  color: var(--accent);
+  background: var(--card);
+}
+.welcome-circles span:nth-child(2) {
+  border-color: var(--accent);
+}
+@media (max-width: 700px) {
+  .personal-learning-workspace {
+    padding: 0 20px;
+  }
+  .circle-learning-layout {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .circle-lesson-panel {
+    position: static;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding: 24px 0;
+  }
+  .skill-circle {
+    width: 84px;
+    height: 84px;
+  }
+  .skill-circle svg {
+    width: 80px;
+    height: 80px;
+  }
+  .grade-skill > strong {
+    font-size: 12px;
+  }
+  .grade-skill > span {
+    font-size: 10px;
+  }
+  .grade-path-toolbar {
+    align-items: start;
+    flex-direction: column;
+  }
+}

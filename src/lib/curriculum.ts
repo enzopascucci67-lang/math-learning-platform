@@ -1,4 +1,10 @@
+import { personalizeCourses } from "./grade-content";
+export type QuestionVisual =
+  | { type: "objects"; count: number; color?: "blue" | "gold" }
+  | { type: "array"; rows: number; columns: number }
+  | { type: "fraction"; numerator: number; denominator: number };
 export type Question = {
+  visual?: QuestionVisual;
   id: string;
   prompt: string;
   answer: string;
@@ -16,6 +22,7 @@ export type Lesson = {
   questions: Question[];
 };
 export type Unit = {
+  grades?: number[];
   id: string;
   title: string;
   x: number;
@@ -285,7 +292,7 @@ const algebra: Unit[] = [
     ],
   },
 ];
-export const courses: Course[] = [
+export const courses: Course[] = personalizeCourses([
   {
     id: "arithmetic",
     title: "Everyday arithmetic",
@@ -417,7 +424,7 @@ export const courses: Course[] = [
     units: [],
     planned: true,
   })),
-];
+]);
 export const satDomains = [
   "Algebra",
   "Advanced Math",
